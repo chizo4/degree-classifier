@@ -120,3 +120,6 @@ cython_debug/
 
 # DB files.
 *.db
+
+# Ignore the project data.
+data/
