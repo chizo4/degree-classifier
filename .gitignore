@@ -122,4 +122,4 @@ cython_debug/
 *.db
 
 # Ignore the project data.
-data/
+data/academic_module_grades.csv
