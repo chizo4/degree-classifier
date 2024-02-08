@@ -1,31 +1,39 @@
 '''
 --------------------------------------------------------------
 FILE:
-    code/data_handler.py
+    code/degree_classifier.py
 
 DEGREE-CLASSIFIER:
-    DataHandler class serving various functionalities for CSV data.
+    DegreeClassifier class serving various functionalities for 
+    processing CSV data and calculating its stats.
 
 AUTHOR:
     Filip J. Cierkosz
 
 VERSION:
-    07/02/2024
+    08/02/2024
 --------------------------------------------------------------
 '''
+
 
 from academic_module import AcademicModule
 from csv import DictReader, DictWriter
 import os
 
-class DataHandler:
-    '''
-    -------------------------
-    DataHandler class handling CSV data processing.
-    -------------------------
-    '''
 
-    def __init__(self: 'DataHandler', file_path: str) -> None:
+class DegreeClassifier:
+    '''
+    -------------------------
+    DegreeClassifier class handling CSV data processing and stats.
+    -------------------------
+    '''
+    FHEQ_LEVELS = [
+        4,    # Year 1.
+        5,    # Year 2.
+        6     # Year 3.
+    ]
+
+    def __init__(self: 'DegreeClassifier', file_path: str) -> None:
         '''
         Initialize the class providing the (CSV) file name.
 
@@ -36,7 +44,7 @@ class DataHandler:
         self.file = file_path
         self.ac_modules = []
 
-    def read_csv(self: 'DataHandler') -> bool:
+    def read_csv(self: 'DegreeClassifier') -> bool:
         '''
         Read a CSV file with columns: code, name, credits, fheq, grade.
 
@@ -44,6 +52,7 @@ class DataHandler:
             -------------------------
             (bool) : Indication of a successful operation.
         '''
+        ac_mod_data = []
         i = 0
         try:
             with open(self.file, newline='', encoding='utf-8') as csv_file:
@@ -58,16 +67,17 @@ class DataHandler:
                     grade = int(row['grade'])
                     # If a valid record, then assign a dataclass instance.
                     if code and name and credits and fheq and grade:
-                        am = AcademicModule(
+                        ac_mod = AcademicModule(
                             code=code,
                             name=name,
                             credits=credits,
                             fheq=fheq,
                             grade=grade
                         )
-                        self.ac_modules.append(am)
+                        ac_mod_data.append(ac_mod)
                     else:
                         print(f'WARNING: Invalid record skipped in row {i} in {self.file}.')
+                self.ac_modules = ac_mod_data
                 return True
         except FileNotFoundError:
             print(f'ERROR: File {self.file} not found.')
@@ -75,13 +85,13 @@ class DataHandler:
             print(f'ERROR: {e}')
         return False
 
-    def add_csv_record(self: 'DataHandler', new_am: 'AcademicModule') -> bool:
+    def add_csv_record(self: 'DegreeClassifier', new_ac_mod: 'AcademicModule') -> bool:
         '''
         Add a new data record into the data file (CSV).
 
             Parameters:
             -------------------------
-            new_am (AcademicModule) : An instance of a new AcademicModule record. 
+            new_ac_mod (AcademicModule) : An instance of a new AcademicModule record. 
 
             Return:
             -------------------------
@@ -96,54 +106,52 @@ class DataHandler:
                 )
                 if not exist_file:
                     writer.writeheader()
-                writer.writerow(new_am.__dict__)
+                writer.writerow(new_ac_mod.__dict__)
             return True
         except FileNotFoundError:
             print(f'ERROR: File {self.file} not found.')
         except Exception as e:
             print(f'ERROR: {e}')
         return False
+    
+    def calc_year_avg(self: 'DegreeClassifier') -> list:
+        '''
+        Calculate year-by-year averages based on FHEQ levels.
 
-    def input_academic_module(self: 'DataHandler') -> None:
+            Return:
+            -------------------------
+            (list) : Tuples of calculated year-by-year averages.
         '''
-        Create a new AcademicModule based on the CLI input. Then, save it in CSV.
+        if self.read_csv():
+            year_avgs = []
+            for fheq in self.FHEQ_LEVELS:
+                # Filter target modules by FHEQ.
+                ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == fheq]
+                # Calculate the target year average.
+                avg_sum = sum([ac_mod.grade * ac_mod.credits for ac_mod in ac_mods])
+                credit_sum = sum([ac_mod.credits for ac_mod in ac_mods])
+                year_avg = avg_sum / credit_sum
+                year_avgs.append((year_avg, fheq))
+            return year_avgs
+        return []
+    
+    def calc_degree_avg(self: 'DegreeClassifier') -> float:
         '''
-        print('Enter the details of a new Academic Module.')
-        while True:
-            code = input('Code: ')
-            if not code:
-                os.system('clear')
-                print('Code is required. Please try again.')
-                continue
-            name = input('Name: ')
-            if not name:
-                os.system('clear')
-                print('Name is required. Please try again.')
-                continue
-            credits = int(input('Credits: '))
-            if credits < 0:
-                os.system('clear')
-                print('Credits must be a positive integer. Please try again.')
-                continue
-            fheq = int(input('FHEQ Level: '))
-            if fheq <= 0:
-                os.system('clear')
-                print('FHEQ Level must be a positive integer. Please try again.')
-                continue
-            grade = int(input('Grade: '))
-            if grade < 0 or grade > 100:
-                os.system('clear')
-                print('Grade must be in range 0-100. Please try again.')
-                continue
-            # If valid inputs, then create an object and store it in data file.
-            am = AcademicModule(
-                code=code,
-                name=name,
-                credits=credits,
-                fheq=fheq,
-                grade=grade
-            )
-            if self.add_csv_record(new_am=am):
-                os.system('clear')
-                print(f'\nSUCCESS! New Academic Module created:\n{am}')
-            break
+        Calculate the (current) full-degree average.
+
+            Return:
+            -------------------------
+            (float) : Full-degree average.
+        '''
+        if self.read_csv():
+            # Handle FHEQ Level 5.
+            fheq5_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == 5]
+            avg_sum = sum([ac_mod.grade * ac_mod.credits for ac_mod in fheq5_ac_mods])
+            credit_sum = sum([ac_mod.credits for ac_mod in fheq5_ac_mods])
+            # Handle FHEQ Level 6.
+            fheq6_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == 6]
+            avg_sum += sum([2 * ac_mod.grade * ac_mod.credits for ac_mod in fheq6_ac_mods])
+            credit_sum += sum([2 * ac_mod.credits for ac_mod in fheq6_ac_mods])
+            degree_avg = avg_sum / credit_sum
+            return degree_avg
+        return None
