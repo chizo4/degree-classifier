@@ -59,14 +59,17 @@ class MainCLI:
         Show averages per academic year calling the DegreeClassifier instance.
         '''
         year_avgs = self.degree_classifier.calc_year_avg()
-        # TODO: print all year by year avgs
+        line_sep = '\n' + (30 * '-')
+        for (avg, fheq) in year_avgs:
+            print(f'{line_sep}\n{self.FHEQ_MAP[fheq]} Average: {avg:.1f}%{line_sep}')
     
     def get_degree_avg(self: 'MainCLI') -> None:
         '''
         Show (current) full-degree average calling the DegreeClassifier instance.
         '''
-        degree_avg = self.degree_classifier.calc_degree_avg()
-        # TODO: print 
+        avg = self.degree_classifier.calc_degree_avg()
+        line_sep = '\n' + (30 * '-')
+        print(f'{line_sep}\nDEGREE AVERAGE: {avg:.1f}%{line_sep}')
 
     def add_academic_module(self: 'MainCLI') -> None:
         '''
