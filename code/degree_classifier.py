@@ -27,6 +27,7 @@ class DegreeClassifier:
     DegreeClassifier class handling CSV data processing and stats.
     -------------------------
     '''
+    FILE_TXT = '../data/degree_average.txt'
     FHEQ_LEVELS = [
         4,    # Year 1.
         5,    # Year 2.
@@ -153,5 +154,18 @@ class DegreeClassifier:
             avg_sum += sum([2 * ac_mod.grade * ac_mod.credits for ac_mod in fheq6_ac_mods])
             credit_sum += sum([2 * ac_mod.credits for ac_mod in fheq6_ac_mods])
             degree_avg = avg_sum / credit_sum
+            if degree_avg > 0 and degree_avg <= 100:
+                self.save_degree_avg(degree_avg=degree_avg)
             return degree_avg
         return None
+    
+    def save_degree_avg(self: 'DegreeClassifier', degree_avg: float) -> None:
+        '''
+        Save the (current) degree average in a TXT file.
+
+            Parameters:
+            -------------------------
+            degree_avg (float) : Calculated degree average.
+        '''
+        with open(self.FILE_TXT, 'w') as file:
+            file.write(f'DEGREE AVERAGE: {degree_avg}')
