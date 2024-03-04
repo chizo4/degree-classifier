@@ -32,20 +32,12 @@ Follow these steps to get `degree-classifier` up and running on your machine:
    git clone https://github.com/chizo4/degree-classifier.git
    ```
 
-3. **Setup:**
-   Navigate to the root directory of the project and run the setup script (it initializes the data file in a specified path):
+3. **Setup & Run the `main` Program:**
+   Navigate to the root directory of the project and execute the `run` script (it initializes the data file during a first run):
 
    ```shell
    cd degree-classifier
-   bash setup.sh
-   ```
-  
-5. **Run the `main` Program:**
-   To make use of this project and find insights associated with your grades, please execute the following commands (make sure you are in the root of the repo):
-
-   ```shell
-   cd code
-   python main.py
+   bash run.sh
    ```
 
    Done with that, you can see further instructions about what can be calculated, and so on.
