@@ -8,7 +8,7 @@ This is a super quick personal tool to calculate some insights associated with B
 The project allows you to calculate the following insights associated with your degree:
 - List of all module marks (up-to-date).
 - Averages on a year-by-year basis.
-- Total (or current) degree average, assuming that Y2 and Y3 count as 33.3% and 66.7% respectively.
+- Total (or current) degree average, assuming that `Y2` and `Y3` count as `33.3%` and `66.7%` respectively.
 
 ## Running the App 🚀
 
@@ -25,7 +25,7 @@ Follow these steps to get `degree-classifier` up and running on your machine:
    > **Warning:**
    If your shell fails to recognize these commands, please install `Python` and `Pip` from their official sites: [Python](https://www.python.org/downloads/) and [Pip](https://pip.pypa.io/en/stable/installation/).
 
-2. **Clone the Repository:**
+2. **Repo Clone:**
    Clone the repository from `GitHub`:
 
    ```shell
@@ -50,8 +50,8 @@ Follow these steps to get `degree-classifier` up and running on your machine:
 
    Done with that, you can see further instructions about what can be calculated, and so on.
 
-   > **Adding Your Grades**
-   You can add your grades into the CSV file by using the `i` option provided in the very silly CLI that I created, or by adding them directly into the CSV file. If going with the latter, you can refer to (this)[https://github.com/chizo4/degree-classifier/blob/main/data/template.csv] file to find an example. 
+   > **Adding Your Grades:**
+   You can add your grades into the CSV file by using the `i` option provided in the very silly CLI that I created, or by adding them directly into the CSV file. If going with the latter, you can refer to [this](https://github.com/chizo4/degree-classifier/blob/main/data/template.csv) file to find an example. 
 
 ## Contribution & Collaboration 🤝
 
