@@ -11,7 +11,7 @@ AUTHOR:
     Filip J. Cierkosz
 
 VERSION:
-    08/02/2024
+    04/03/2024
 --------------------------------------------------------------
 '''
 
@@ -123,19 +123,22 @@ class DegreeClassifier:
             -------------------------
             (list) : Tuples of calculated year-by-year averages.
         '''
-        if self.read_csv():
-            year_avgs = []
-            for fheq in self.FHEQ_LEVELS:
-                # Filter target modules by FHEQ.
-                ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == fheq]
-                # Calculate the target year average.
-                avg_sum = sum([ac_mod.grade * ac_mod.credits for ac_mod in ac_mods])
-                credit_sum = sum([ac_mod.credits for ac_mod in ac_mods])
-                year_avg = avg_sum / credit_sum
-                year_avgs.append((year_avg, fheq))
-            return year_avgs
+        try:
+            if self.read_csv():
+                year_avgs = []
+                for fheq in self.FHEQ_LEVELS:
+                    # Filter target modules by FHEQ.
+                    ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == fheq]
+                    # Calculate the target year average.
+                    avg_sum = sum([ac_mod.grade * ac_mod.credits for ac_mod in ac_mods])
+                    credit_sum = sum([ac_mod.credits for ac_mod in ac_mods])
+                    year_avg = avg_sum / credit_sum
+                    year_avgs.append((year_avg, fheq))
+                return year_avgs
+        except ZeroDivisionError:
+            print('ERROR: Cannot calculate the average if there are no grades provided.')
         return []
-    
+ 
     def calc_degree_avg(self: 'DegreeClassifier') -> float:
         '''
         Calculate the (current) full-degree average.
@@ -144,19 +147,22 @@ class DegreeClassifier:
             -------------------------
             (float) : Full-degree average.
         '''
-        if self.read_csv():
-            # Handle FHEQ Level 5.
-            fheq5_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == 5]
-            avg_sum = sum([ac_mod.grade * ac_mod.credits for ac_mod in fheq5_ac_mods])
-            credit_sum = sum([ac_mod.credits for ac_mod in fheq5_ac_mods])
-            # Handle FHEQ Level 6.
-            fheq6_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == 6]
-            avg_sum += sum([2 * ac_mod.grade * ac_mod.credits for ac_mod in fheq6_ac_mods])
-            credit_sum += sum([2 * ac_mod.credits for ac_mod in fheq6_ac_mods])
-            degree_avg = avg_sum / credit_sum
-            if degree_avg > 0 and degree_avg <= 100:
-                self.save_degree_avg(degree_avg=degree_avg)
-            return degree_avg
+        try:
+            if self.read_csv():
+                # Handle FHEQ Level 5.
+                fheq5_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == 5]
+                avg_sum = sum([ac_mod.grade * ac_mod.credits for ac_mod in fheq5_ac_mods])
+                credit_sum = sum([ac_mod.credits for ac_mod in fheq5_ac_mods])
+                # Handle FHEQ Level 6.
+                fheq6_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == 6]
+                avg_sum += sum([2 * ac_mod.grade * ac_mod.credits for ac_mod in fheq6_ac_mods])
+                credit_sum += sum([2 * ac_mod.credits for ac_mod in fheq6_ac_mods])
+                degree_avg = avg_sum / credit_sum
+                if degree_avg > 0 and degree_avg <= 100:
+                    self.save_degree_avg(degree_avg=degree_avg)
+                return degree_avg
+        except ZeroDivisionError:
+            print('ERROR: Cannot calculate the average if there are no grades provided.')
         return None
     
     def save_degree_avg(self: 'DegreeClassifier', degree_avg: float) -> None:
