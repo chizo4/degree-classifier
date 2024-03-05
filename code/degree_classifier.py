@@ -11,7 +11,7 @@ AUTHOR:
     Filip J. Cierkosz
 
 VERSION:
-    04/03/2024
+    05/03/2024
 --------------------------------------------------------------
 '''
 
@@ -44,6 +44,8 @@ class DegreeClassifier:
         '''
         self.file = file_path
         self.ac_modules = []
+        # Read the CSV data file on initialization.
+        self.read_csv()
 
     def read_csv(self: 'DegreeClassifier') -> bool:
         '''
