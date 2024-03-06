@@ -10,7 +10,7 @@ AUTHOR:
     Filip J. Cierkosz
 
 VERSION:
-    04/03/2024
+    06/03/2024
 --------------------------------------------------------------
 '''
 
@@ -51,8 +51,11 @@ class MainCLI:
         '''
         Show all (atomic) academic module grades.
         '''
-        for ac_mod in self.degree_classifier.ac_modules:
-            print(ac_mod)
+        if self.degree_classifier.ac_modules:
+            for ac_mod in self.degree_classifier.ac_modules:
+                print(ac_mod)
+        else:
+            print('WARNING: No academic module records detected. Please add some!')
 
     def get_year_avg(self: 'MainCLI') -> None:
         '''
@@ -63,6 +66,8 @@ class MainCLI:
             line_sep = '\n' + (30 * '-')
             for (avg, fheq) in year_avgs:
                 print(f'{line_sep}\n{self.FHEQ_MAP[fheq]} Average: {avg:.1f}%{line_sep}')
+        else:
+            print('WARNING: No academic module records detected. Please add some!')
     
     def get_degree_avg(self: 'MainCLI') -> None:
         '''
@@ -72,6 +77,8 @@ class MainCLI:
         if avg:
             line_sep = '\n' + (30 * '-')
             print(f'{line_sep}\nDEGREE AVERAGE: {avg:.1f}%{line_sep}')
+        else:
+            print('WARNING: No academic module records above FHEQ4 detected. Please add some!')
 
     def add_academic_module(self: 'MainCLI') -> None:
         '''
