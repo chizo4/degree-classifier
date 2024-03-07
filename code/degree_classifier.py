@@ -156,8 +156,8 @@ class DegreeClassifier:
                 fheq5_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == 5]
                 avg_sum = sum([ac_mod.grade * ac_mod.credits for ac_mod in fheq5_ac_mods])
                 credit_sum = sum([ac_mod.credits for ac_mod in fheq5_ac_mods])
-                # Handle FHEQ Level 6.
-                fheq6_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq == 6]
+                # Handle FHEQ Level 6 or 7.
+                fheq6_ac_mods = [ac_mod for ac_mod in self.ac_modules if ac_mod.fheq in [6, 7]]
                 avg_sum += sum([2 * ac_mod.grade * ac_mod.credits for ac_mod in fheq6_ac_mods])
                 credit_sum += sum([2 * ac_mod.credits for ac_mod in fheq6_ac_mods])
                 degree_avg = avg_sum / credit_sum

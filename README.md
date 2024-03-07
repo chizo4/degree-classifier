@@ -1,7 +1,7 @@
 # 🎓 `degree-classifier`
 
 > **Note:**
-This is a super quick personal tool to calculate some insights associated with the Bachelor's degree classification at the [University of Sheffield](https://www.sheffield.ac.uk/), based on data provided in a `CSV` file.
+This is a super quick personal tool to calculate some insights associated with the `Bachelor's`/`Master's` degree classification at the [University of Sheffield](https://www.sheffield.ac.uk/), based on data provided in a `CSV` file.
 
 ## Idea 🧠
 
